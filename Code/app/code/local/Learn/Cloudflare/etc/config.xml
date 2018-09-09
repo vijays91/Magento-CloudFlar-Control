@@ -63,6 +63,17 @@
     </admin>
 	
 	<adminhtml>
+		<events>
+			<core_block_abstract_to_html_after>
+				<observers>
+					<cloudflare>
+						<type>singleton</type>
+						<class>cloudflare/observer</class>
+						<method>injectHtml</method>
+					</cloudflare>
+				</observers>
+			</core_block_abstract_to_html_after>
+		</events>
 		<acl>
 			<resources>
 				 <all>
