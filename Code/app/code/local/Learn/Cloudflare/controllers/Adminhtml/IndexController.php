@@ -28,18 +28,22 @@ class Learn_Cloudflare_Adminhtml_IndexController extends Mage_Adminhtml_Controll
 				if($result['success'] == 1) {
 					$message = $this->__("cache refreshed successfully.");
 					Mage::getSingleton('core/session')->addSuccess($message);
+					Mage::app()->getResponse()->setRedirect(Mage::helper('adminhtml')->getUrl("adminhtml/system_config/edit/section/cloudflare_settings/"));
 					return true;
 				} else {
 					$message = $this->__("Error - flushing the cache.");
 					Mage::getSingleton('core/session')->addError($message);	
+					Mage::app()->getResponse()->setRedirect(Mage::helper('adminhtml')->getUrl("adminhtml/system_config/edit/section/cloudflare_settings/"));
 				}
 			} else {
 				$message = $this->__("Kindly check the Email-ID, API-Key and Zone ID.");
 				Mage::getSingleton('core/session')->addNotice($message);	
+				Mage::app()->getResponse()->setRedirect(Mage::helper('adminhtml')->getUrl("adminhtml/system_config/edit/section/cloudflare_settings/"));
 			}
 		} else {
 			$message = $this->__("Kindly enable the module for cloudflare settings control.");
 			Mage::getSingleton('core/session')->addNotice($message);
+			Mage::app()->getResponse()->setRedirect(Mage::helper('adminhtml')->getUrl("adminhtml/system_config/edit/section/cloudflare_settings/"));
 		}
 		
 		$this->_redirectReferer();
