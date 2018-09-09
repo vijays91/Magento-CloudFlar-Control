@@ -292,28 +292,33 @@ class Learn_Cloudflare_Model_Observer
         $block  = $observer->getBlock();
 
         if($block instanceof Mage_Adminhtml_Block_Cache_Additional) {
-            $transport = $observer->getTransport();
+			
+			$_helper = Mage::helper('cloudflare');
 
-            $insert =
-                '<tr>
-                    <td class="scope-label">
-                        <button onclick="setLocation(\'' . Mage::helper('adminhtml')->getUrl('cloudflare/adminhtml_index/newflush/') . '\')" type="button" class="scalable">
-                            <span>' . Mage::helper('adminhtml')->__('Flush CloudFlare Cache') . '</span>
-                        </button>
-                    </td>
-                    <td class="scope-label">' . Mage::helper('adminhtml')->__('Flush cache cloudflare account.') . '</td>
-                </tr>';
+			if($_helper->cloudflare_enable()) {
 
-            $dom = new DOMDocument();
+				$transport = $observer->getTransport();
+				$insert =
+					'<tr>
+						<td class="scope-label">
+							<button onclick="setLocation(\'' . Mage::helper('adminhtml')->getUrl('cloudflare/adminhtml_index/newflush/') . '\')" type="button" class="scalable">
+								<span>' . Mage::helper('adminhtml')->__('Flush CloudFlare Cache') . '</span>
+							</button>
+						</td>
+						<td class="scope-label">' . Mage::helper('adminhtml')->__('Flush cache cloudflare account.') . '</td>
+					</tr>';
 
-            $dom->loadHTML($transport->getHtml());
+				$dom = new DOMDocument();
 
-            $td = $dom->createDocumentFragment();
-            $td->appendXML($insert);
+				$dom->loadHTML($transport->getHtml());
 
-            $dom->getElementsByTagName('table')->item(1)->insertBefore($td, $dom->getElementsByTagName('table')->item(1)->firstChild);
+				$td = $dom->createDocumentFragment();
+				$td->appendXML($insert);
 
-            $transport->setHtml($dom->saveHTML());
+				$dom->getElementsByTagName('table')->item(1)->insertBefore($td, $dom->getElementsByTagName('table')->item(1)->firstChild);
+
+				$transport->setHtml($dom->saveHTML());
+			}
         }
     }
 	
