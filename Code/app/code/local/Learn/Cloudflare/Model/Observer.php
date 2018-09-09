@@ -285,6 +285,36 @@ class Learn_Cloudflare_Model_Observer
 			Mage::getSingleton('core/session')->addError($message);	
 		}
 		return true;
+	}
+
+	/* Show in cache Zone*/
+	public function injectHtml(Varien_Event_Observer $observer) {
+        $block  = $observer->getBlock();
+
+        if($block instanceof Mage_Adminhtml_Block_Cache_Additional) {
+            $transport = $observer->getTransport();
+
+            $insert =
+                '<tr>
+                    <td class="scope-label">
+                        <button onclick="setLocation(\'' . Mage::helper('adminhtml')->getUrl('cloudflare/adminhtml_index/newflush/') . '\')" type="button" class="scalable">
+                            <span>' . Mage::helper('adminhtml')->__('Flush CloudFlare Cache') . '</span>
+                        </button>
+                    </td>
+                    <td class="scope-label">' . Mage::helper('adminhtml')->__('Flush cache cloudflare account.') . '</td>
+                </tr>';
+
+            $dom = new DOMDocument();
+
+            $dom->loadHTML($transport->getHtml());
+
+            $td = $dom->createDocumentFragment();
+            $td->appendXML($insert);
+
+            $dom->getElementsByTagName('table')->item(1)->insertBefore($td, $dom->getElementsByTagName('table')->item(1)->firstChild);
+
+            $transport->setHtml($dom->saveHTML());
+        }
     }
 	
 }
